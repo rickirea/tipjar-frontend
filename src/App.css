@@ -1,0 +1,124 @@
+:root {
+  --bg-1: #0f1724;
+  --bg-2: #071129;
+  --card: rgba(255, 255, 255, 0.04);
+  --accent: #7c5cff;
+  --accent-2: #3ddc97;
+  --muted: #9aa4b2;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --radius: 12px;
+  --shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+  font-size: 16px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  color: #e6eef8;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 420px;
+  margin: 48px auto;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+}
+
+.app-container h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
+}
+
+.wallet-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  max-width: 360px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  outline: none;
+  transition: transform .06s ease, box-shadow .06s ease, border-color .12s ease;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 92, 255, 0.12);
+  border-color: rgba(124, 92, 255, 0.35);
+  color: #e6eef8;
+}
+
+button {
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--accent), #5ad6ff 120%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 8px 18px rgba(124, 92, 255, 0.18);
+  transition: transform .08s ease, box-shadow .08s ease, opacity .08s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(124, 92, 255, 0.18);
+}
+
+button:active {
+  transform: translateY(0);
+  opacity: 0.95;
+}
+
+.wallet-adapter-button {
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  background: linear-gradient(90deg, #ffffff11, #ffffff08) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: #dfe9ff !important;
+}
+
+.status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  min-height: 1.2em;
+}
+
+@media (max-width:480px) {
+  .app-container {
+    margin: 20px;
+    padding: 18px;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+}
