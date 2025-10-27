@@ -48,7 +48,7 @@ export default function App() {
   const getPlatformPDA = () => {
     const programId = new web3.PublicKey(idl.address);
     const [pda] = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('platform-v4')],
+      [Buffer.from('platform-v5')],
       programId
     );
     return pda;
@@ -57,7 +57,7 @@ export default function App() {
   const getPlatformVaultPDA = () => {
     const programId = new web3.PublicKey(idl.address);
     const [pda] = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('platform-vault-v4')],
+      [Buffer.from('platform-vault-v5')],
       programId
     );
     return pda;
@@ -66,7 +66,7 @@ export default function App() {
   const getUserProfilePDA = (username) => {
     const programId = new web3.PublicKey(idl.address);
     const [pda] = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('profile-v4'), Buffer.from(username)],
+      [Buffer.from('profile-v5'), Buffer.from(username)],
       programId
     );
     return pda;
@@ -75,7 +75,16 @@ export default function App() {
   const getTipJarPDA = (username) => {
     const programId = new web3.PublicKey(idl.address);
     const [pda] = web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('tipjar-v4'), Buffer.from(username)],
+      [Buffer.from('tipjar-v5'), Buffer.from(username)],
+      programId
+    );
+    return pda;
+  };
+
+  const getWalletToUsernamePDA = (walletPublicKey) => {
+    const programId = new web3.PublicKey(idl.address);
+    const [pda] = web3.PublicKey.findProgramAddressSync(
+      [Buffer.from('wallet-username-v5'), walletPublicKey.toBuffer()],
       programId
     );
     return pda;
@@ -124,6 +133,25 @@ export default function App() {
           setStatusType('error');
           setTimeout(() => setStatus(''), 5000);
         }
+        return null;
+      }
+    },
+    [getProgram]
+  );
+
+  const findUsernameByWallet = useCallback(
+    async (walletPublicKey) => {
+      if (!walletPublicKey) return null;
+
+      try {
+        const program = getProgram();
+        const walletToUsernamePDA = getWalletToUsernamePDA(walletPublicKey);
+        const account = await program.account.walletToUsername.fetch(
+          walletToUsernamePDA
+        );
+        return account.username;
+      } catch (err) {
+        console.log('Wallet has no username registered');
         return null;
       }
     },
@@ -197,7 +225,8 @@ export default function App() {
       // Forzar actualización de la UI inmediatamente
       await fetchPlatformStats();
     } catch (err) {
-      setStatus(`Error: ${err.message}`);
+      console.error('Initialize platform error:', err);
+      setStatus(`Error: ${err.message || err.toString()}`);
       setStatusType('error');
       setTimeout(() => setStatus(''), 5000);
     } finally {
@@ -244,14 +273,6 @@ export default function App() {
         .rpc();
 
       const registeredUsername = username;
-
-      // Guardar el username en localStorage para auto-load futuro
-      if (wallet.publicKey) {
-        localStorage.setItem(
-          `creator_${wallet.publicKey.toString()}`,
-          registeredUsername
-        );
-      }
 
       // Redirigir al perfil del creador recién creado
       setUsername(registeredUsername); // Establecer el username para la vista de usuario
@@ -548,18 +569,16 @@ export default function App() {
       // Si hay una URL dinámica, NO auto-redirigir
       if (hasDynamicUrl) return;
 
-      // Verificar si hay un username guardado para este wallet
-      const storedUsername = localStorage.getItem(
-        `creator_${wallet.publicKey.toString()}`
-      );
+      // Buscar username on-chain por wallet
+      const username = await findUsernameByWallet(wallet.publicKey);
 
-      if (storedUsername && currentView === 'home') {
-        // Este wallet es un creador conocido, cargar su perfil
-        const profile = await fetchUserProfile(storedUsername);
+      if (username && currentView === 'home') {
+        // Este wallet es un creador registrado, cargar su perfil
+        const profile = await fetchUserProfile(username);
         if (profile) {
-          setUsername(storedUsername);
+          setUsername(username);
           setCurrentView('user');
-          await fetchTipJarStats(storedUsername);
+          await fetchTipJarStats(username);
         }
       }
     };
@@ -572,6 +591,7 @@ export default function App() {
     location.pathname,
     fetchUserProfile,
     fetchTipJarStats,
+    findUsernameByWallet,
   ]);
 
   // Permisos y roles - calcular siempre que cambien los datos
