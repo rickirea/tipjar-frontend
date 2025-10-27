@@ -13,4 +13,13 @@ export default defineConfig({
       buffer: 'buffer/',
     },
   },
+  server: {
+    host: '0.0.0.0', // Allow external connections
+    port: 5173,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 5173,
+    },
+  },
 });

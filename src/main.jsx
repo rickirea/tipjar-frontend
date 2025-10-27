@@ -11,12 +11,23 @@ import {
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 const endpoint = 'https://api.devnet.solana.com';
-const wallets = [new PhantomWalletAdapter()];
+// Configure wallets with mobile support
+const wallets = [
+  new PhantomWalletAdapter({
+    // Mobile deep link configuration
+    url: 'https://phantom.app/ul/v1',
+  }),
+  new SolflareWalletAdapter(),
+  // Note: Mobile Wallet Adapter will automatically detect if running on mobile
+];
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ConnectionProvider endpoint={endpoint}>

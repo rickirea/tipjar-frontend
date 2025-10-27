@@ -107,18 +107,61 @@ button:active {
   min-height: 1.2em;
 }
 
+/* Responsive styles for mobile */
 @media (max-width:480px) {
   .app-container {
-    margin: 20px;
-    padding: 18px;
+    margin: 12px;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .app-container h1 {
+    font-size: 1.4rem;
   }
 
   input[type="text"],
   input[type="number"] {
     max-width: 100%;
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 
-  h1 {
-    font-size: 1.4rem;
+  button {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+
+  /* Header responsive */
+  header {
+    padding: 12px 16px !important;
+  }
+
+  header h1 {
+    font-size: 20px !important;
+  }
+
+  /* Wallet button */
+  .wallet-adapter-button {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+}
+
+/* Responsive styles for tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  .app-container {
+    max-width: 90%;
+    margin: 32px auto;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  button {
+    min-height: 44px; /* Minimum touch target size */
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    min-height: 44px; /* Minimum touch target size */
   }
 }

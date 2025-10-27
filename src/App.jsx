@@ -620,14 +620,18 @@ export default function App() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            gap: '16px',
+            flexWrap: 'wrap',
           }}
         >
-          <h1 style={{ fontSize: 28, fontWeight: 700 }}>💎 TipJar Platform</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>
+            💎 TipJar Platform
+          </h1>
           <WalletMultiButton />
         </div>
       </header>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px' }}>
         {status && (
           <div
             style={{
